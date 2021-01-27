@@ -117,5 +117,3 @@ CatScript is statically typed, with a small type system as follows
 * list<x> - a list of value with the type 'x'
 * null - the null type 
 * object - any type of value
-
-:)
