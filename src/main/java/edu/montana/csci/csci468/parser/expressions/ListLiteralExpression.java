@@ -30,7 +30,11 @@ public class ListLiteralExpression extends Expression {
         }
         if (values.size() > 0) {
             // TODO - generalize this looking at all objects in list
-            type = CatscriptType.getListType(values.get(0).getType());
+            type = CatscriptType.getListType(values.get(0).getType()); //given by prof
+           /* for(int i = 0; i < values.size(); i++) { //
+                type = CatscriptType.getListType(values.get(i).getType());
+            } //*/
+
         } else {
             type = CatscriptType.getListType(CatscriptType.OBJECT);
         }

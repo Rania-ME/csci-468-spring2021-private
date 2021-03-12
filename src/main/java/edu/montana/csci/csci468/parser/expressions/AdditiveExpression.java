@@ -4,7 +4,6 @@ import edu.montana.csci.csci468.bytecode.ByteCodeGenerator;
 import edu.montana.csci.csci468.eval.CatscriptRuntime;
 import edu.montana.csci.csci468.parser.CatscriptType;
 import edu.montana.csci.csci468.parser.ErrorType;
-import edu.montana.csci.csci468.parser.ParseError;
 import edu.montana.csci.csci468.parser.SymbolTable;
 import edu.montana.csci.csci468.tokenizer.Token;
 import edu.montana.csci.csci468.tokenizer.TokenType;
@@ -44,7 +43,16 @@ public class AdditiveExpression extends Expression {
                 rightHandSide.addError(ErrorType.INCOMPATIBLE_TYPES);
             }
         }
-        // TODO handle strings
+        // TODO handle strings (done)
+        if (getType().equals(CatscriptType.STRING)) {
+            if (!leftHandSide.getType().equals(CatscriptType.STRING)) {
+                leftHandSide.addError(ErrorType.INCOMPATIBLE_TYPES);
+            }
+            if (!rightHandSide.getType().equals(CatscriptType.STRING)) {
+                rightHandSide.addError(ErrorType.INCOMPATIBLE_TYPES);
+                //evaluating expressions. supposed to work with int and string. concatenate
+            }
+        }
     }
 
     @Override

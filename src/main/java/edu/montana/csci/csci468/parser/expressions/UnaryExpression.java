@@ -4,7 +4,6 @@ import edu.montana.csci.csci468.bytecode.ByteCodeGenerator;
 import edu.montana.csci.csci468.eval.CatscriptRuntime;
 import edu.montana.csci.csci468.parser.CatscriptType;
 import edu.montana.csci.csci468.parser.ErrorType;
-import edu.montana.csci.csci468.parser.ParseError;
 import edu.montana.csci.csci468.parser.SymbolTable;
 import edu.montana.csci.csci468.tokenizer.Token;
 import edu.montana.csci.csci468.tokenizer.TokenType;
@@ -65,7 +64,11 @@ public class UnaryExpression extends Expression {
         if (this.isMinus()) {
             return -1 * (Integer) rhsValue;
         } else {
-            return null; // TODO handle boolean NOT
+            //return null; // TODO handle boolean NOT (done)
+            //return null is a way to write something, but if it is called, things will break which indicates than an unimplemented
+            //segment of code has been called
+            // return boolean not of rhsValue
+            return !((boolean)rhsValue);
         }
     }
 
