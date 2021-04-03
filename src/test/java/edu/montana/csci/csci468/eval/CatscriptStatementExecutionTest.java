@@ -3,10 +3,7 @@ package edu.montana.csci.csci468.eval;
 import edu.montana.csci.csci468.CatscriptTestBase;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class CatscriptStatementExecutionTest extends CatscriptTestBase {
 

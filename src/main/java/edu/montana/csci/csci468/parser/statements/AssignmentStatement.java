@@ -4,19 +4,24 @@ import edu.montana.csci.csci468.bytecode.ByteCodeGenerator;
 import edu.montana.csci.csci468.eval.CatscriptRuntime;
 import edu.montana.csci.csci468.parser.CatscriptType;
 import edu.montana.csci.csci468.parser.ErrorType;
-import edu.montana.csci.csci468.parser.ParseError;
 import edu.montana.csci.csci468.parser.SymbolTable;
 import edu.montana.csci.csci468.parser.expressions.Expression;
 
 public class AssignmentStatement extends Statement {
     private Expression expression;
+    private CatscriptType type;
     private String variableName;
 
     public Expression getExpression() {
         return expression;
     }
 
+    public CatscriptType getType() {
+        return type;
+    }
+
     public void setExpression(Expression expression) {
+        this.type = expression.getType();
         this.expression = addChild(expression);
     }
 
@@ -35,7 +40,7 @@ public class AssignmentStatement extends Statement {
         if (symbolType == null) {
             addError(ErrorType.UNKNOWN_NAME);
         } else {
-            // TOOD - verify compatilibity of types
+            //addError(ErrorType.INCOMPATIBLE_TYPES);
         }
     }
 

@@ -1,7 +1,6 @@
 package edu.montana.csci.csci468.parser;
 
 import edu.montana.csci.csci468.bytecode.ByteCodeGenerator;
-import edu.montana.csci.csci468.eval.CatscriptRuntime;
 import edu.montana.csci.csci468.parser.statements.CatScriptProgram;
 import edu.montana.csci.csci468.parser.statements.FunctionDefinitionStatement;
 import edu.montana.csci.csci468.tokenizer.Token;

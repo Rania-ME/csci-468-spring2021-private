@@ -100,7 +100,7 @@ public class CatscriptTestBase {
         final CatScriptParser parser = new CatScriptParser();
         final CatScriptProgram program = parser.parse(src);
         program.verify();
-        program.execute();
+        program.execute(); //Modified some things called by this
         return program.getOutput();
     }
 

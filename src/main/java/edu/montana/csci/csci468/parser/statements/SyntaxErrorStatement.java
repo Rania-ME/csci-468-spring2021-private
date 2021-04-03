@@ -13,6 +13,9 @@ public class SyntaxErrorStatement extends Statement {
         addError(ErrorType.UNEXPECTED_TOKEN);
     }
 
+    public boolean isSyntaxErrorStatement() {
+        return true;
+    }
     @Override
     public void validate(SymbolTable symbolTable) {}
 

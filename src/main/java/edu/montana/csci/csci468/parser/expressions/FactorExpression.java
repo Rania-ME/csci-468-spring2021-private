@@ -4,7 +4,6 @@ import edu.montana.csci.csci468.bytecode.ByteCodeGenerator;
 import edu.montana.csci.csci468.eval.CatscriptRuntime;
 import edu.montana.csci.csci468.parser.CatscriptType;
 import edu.montana.csci.csci468.parser.ErrorType;
-import edu.montana.csci.csci468.parser.ParseError;
 import edu.montana.csci.csci468.parser.SymbolTable;
 import edu.montana.csci.csci468.tokenizer.Token;
 import edu.montana.csci.csci468.tokenizer.TokenType;
@@ -61,7 +60,21 @@ public class FactorExpression extends Expression {
 
     @Override
     public Object evaluate(CatscriptRuntime runtime) {
-        return super.evaluate(runtime);
+        //return super.evaluate(runtime);
+        if (isMultiply()) {
+            if (leftHandSide instanceof FactorExpression) {
+                Object lhs = leftHandSide.evaluate(null);
+                return (Integer)(lhs) * (Integer)(rightHandSide.evaluate(null));
+            }
+            if (leftHandSide instanceof IntegerLiteralExpression) {
+                return (Integer)(leftHandSide.evaluate(null)) * (Integer)(rightHandSide.evaluate(null));
+            }
+        } else {
+            if (leftHandSide instanceof IntegerLiteralExpression) {
+                return (Integer)(leftHandSide.evaluate(null)) / (Integer)(rightHandSide.evaluate(null));
+            }
+        }
+        return null;
     }
 
     @Override

@@ -4,8 +4,8 @@ import edu.montana.csci.csci468.bytecode.ByteCodeGenerator;
 import edu.montana.csci.csci468.eval.CatscriptRuntime;
 import edu.montana.csci.csci468.parser.CatscriptType;
 import edu.montana.csci.csci468.parser.ErrorType;
-import edu.montana.csci.csci468.parser.ParseError;
 import edu.montana.csci.csci468.parser.SymbolTable;
+import edu.montana.csci.csci468.parser.expressions.BooleanLiteralExpression;
 import edu.montana.csci.csci468.parser.expressions.Expression;
 
 import java.util.Collections;
@@ -70,7 +70,16 @@ public class IfStatement extends Statement {
     //==============================================================
     @Override
     public void execute(CatscriptRuntime runtime) {
-        super.execute(runtime);
+        //super.execute(runtime);
+        if (expression instanceof BooleanLiteralExpression) {
+            if (((BooleanLiteralExpression)expression).getValue()) {
+                trueStatements.get(0).execute(runtime);
+            } else {
+                if (!elseStatements.isEmpty()) {
+                    elseStatements.get(0).execute(runtime);
+                }
+            }
+        }
     }
 
     @Override
