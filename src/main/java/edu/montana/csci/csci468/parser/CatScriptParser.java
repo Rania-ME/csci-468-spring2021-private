@@ -158,7 +158,7 @@ public class CatScriptParser {
             }*/
         } else if (tokens.match(VAR)) {
             VariableStatement varState = new VariableStatement();
-            tokens.consumeToken();//var
+            Token tok = tokens.consumeToken();//var
             //boolean is_list = false;
             Expression id = parseExpression();//var name
             //set explicit type
@@ -241,6 +241,7 @@ public class CatScriptParser {
             }
 
             value_set = true;
+            varState.setStart(tok);
             return varState;
         } else if (tokens.match(IDENTIFIER)) {
             Expression id = parseExpression();
@@ -355,7 +356,7 @@ public class CatScriptParser {
     private Statement parseFunctionDeclaration() {
          if (tokens.match(FUNCTION)) {
             FunctionDefinitionStatement func_def = new FunctionDefinitionStatement();
-            tokens.consumeToken();//function
+            Token tok = tokens.consumeToken();//function
             FunctionCallExpression func_def_expr = (FunctionCallExpression)parseExpression();
             func_def.setName(func_def_expr.getName());
             List<Expression> arg_list = func_def_expr.getArguments();
@@ -413,6 +414,7 @@ public class CatScriptParser {
                 type.setType(CatscriptType.VOID);
                 func_def.setType(type);
             }
+            func_def.setStart(tok);
             return func_def;
         }
         return null;
@@ -485,7 +487,20 @@ public class CatScriptParser {
         Expression expression = parseFactorExpression();
         while (tokens.match(PLUS, MINUS)) {
             Token operator = tokens.consumeToken();
-            final Expression rightHandSide = parseFactorExpression();
+            Expression rightHandSide = parseFactorExpression();
+            if ((expression instanceof StringLiteralExpression) && !(rightHandSide instanceof StringLiteralExpression)) {
+                if (rightHandSide instanceof NullLiteralExpression) {
+                    rightHandSide = new StringLiteralExpression("null");
+                } else {
+                    rightHandSide = new StringLiteralExpression(rightHandSide.toString());
+                }
+            } else if (!(expression instanceof StringLiteralExpression) && (rightHandSide instanceof StringLiteralExpression)) {
+                if (expression instanceof NullLiteralExpression) {
+                    expression = new StringLiteralExpression("null");
+                } else {
+                    expression = new StringLiteralExpression(expression.toString());
+                }
+            }
             AdditiveExpression additiveExpression = new AdditiveExpression(operator, expression, rightHandSide);
             additiveExpression.setStart(expression.getStart());
             additiveExpression.setEnd(rightHandSide.getEnd());
@@ -585,6 +600,7 @@ public class CatScriptParser {
             Token func_name = tokens.consumeToken();
             if (!tokens.hasMoreTokens() || !tokens.match(LEFT_PAREN)) {
                 IdentifierExpression identifierExpression = new IdentifierExpression(func_name.getStringValue());
+                identifierExpression.setStart(func_name);
                 return identifierExpression;
             }
             tokens.consumeToken();
@@ -595,7 +611,17 @@ public class CatScriptParser {
             } else {
                 while (tokens.hasMoreTokens() && !tokens.match(RIGHT_PAREN)) {
                     if (!tokens.match(COMMA)) {
-                        arg_list.add(parseEqualityExpression());
+                        if (tokens.match(COLON)) {
+                            tokens.consumeToken();
+                            Token tok = tokens.consumeToken();
+                            if (tok.getStringValue().equals("list") && tokens.match(LESS)) {
+                                tokens.consumeToken();
+                                tokens.consumeToken();
+                                tokens.consumeToken();
+                            }
+                        } else {
+                            arg_list.add(parseEqualityExpression());
+                        }
                     } else {
                         tokens.consumeToken();
                     }
@@ -604,6 +630,15 @@ public class CatScriptParser {
                     tokens.consumeToken();
                 } else {
                     error = true;
+                }
+            }
+            if (tokens.match(COLON)) {
+                tokens.consumeToken();
+                Token tok = tokens.consumeToken();
+                if (tok.getStringValue().equals("list") && tokens.match(LESS)) {
+                    tokens.consumeToken();
+                    tokens.consumeToken();
+                    tokens.consumeToken();
                 }
             }
             FunctionCallExpression funcExpression = new FunctionCallExpression(func_name.getStringValue(), arg_list);

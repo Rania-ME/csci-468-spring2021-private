@@ -70,6 +70,10 @@ public class FactorExpression extends Expression {
                 return (Integer)(leftHandSide.evaluate(null)) * (Integer)(rightHandSide.evaluate(null));
             }
         } else {
+            if (leftHandSide instanceof FactorExpression) {
+                Object lhs = leftHandSide.evaluate(null);
+                return (Integer)(lhs) / (Integer)(rightHandSide.evaluate(null));
+            }
             if (leftHandSide instanceof IntegerLiteralExpression) {
                 return (Integer)(leftHandSide.evaluate(null)) / (Integer)(rightHandSide.evaluate(null));
             }

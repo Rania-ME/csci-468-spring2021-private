@@ -4,9 +4,8 @@ import edu.montana.csci.csci468.bytecode.ByteCodeGenerator;
 import edu.montana.csci.csci468.eval.CatscriptRuntime;
 import edu.montana.csci.csci468.parser.CatscriptType;
 import edu.montana.csci.csci468.parser.ErrorType;
-import edu.montana.csci.csci468.parser.ParseError;
 import edu.montana.csci.csci468.parser.SymbolTable;
-import edu.montana.csci.csci468.parser.statements.FunctionDefinitionStatement;
+import edu.montana.csci.csci468.parser.statements.*;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -66,7 +65,44 @@ public class FunctionCallExpression extends Expression {
 
     @Override
     public Object evaluate(CatscriptRuntime runtime) {
-        return super.evaluate(runtime);
+        //return super.evaluate(runtime);
+        //FunctionDefinitionStatement func_def = (FunctionDefinitionStatement)((CatScriptProgram)parent).getStatements().get(0);
+        FunctionDefinitionStatement func_def = (FunctionDefinitionStatement)((CatScriptProgram)(parent.getParent())).getStatements().get(0);
+        List<Statement> func_body = func_def.getBody();
+        boolean found;
+        for (int i=0;i<func_body.size();i++) {
+            Statement statement_i = func_body.get(i);
+            found=false;
+            if (statement_i instanceof PrintStatement) {
+                if (((PrintStatement)statement_i).getExpression() instanceof IdentifierExpression) {
+                    for (int j=0;j<func_def.getParameterCount();j++) {
+                        if (((IdentifierExpression) ((PrintStatement) statement_i).getExpression()).getName().equals(func_def.getParameterName(j))) {
+                            ((PrintStatement)statement_i).setExpression(getArguments().get(j));
+                            statement_i.execute(runtime);
+                            found=true;
+                        }
+                    }
+                }
+                if (!found) {
+                    statement_i.execute(runtime);
+                }
+            } else if (statement_i instanceof ReturnStatement) {
+                if (((ReturnStatement)statement_i).getExpression() instanceof IdentifierExpression) {
+                    for (int j=0;j<func_def.getParameterCount();j++) {
+                        if (((IdentifierExpression) ((ReturnStatement) statement_i).getExpression()).getName().equals(func_def.getParameterName(j))) {
+                            ((ReturnStatement)statement_i).setExpression(getArguments().get(j));
+                            statement_i.execute(runtime);
+                            found=true;
+                        }
+                    }
+                }
+                if (!found) {
+                    return ((ReturnStatement)statement_i).getExpression().evaluate(runtime);
+                }
+            }
+        }
+        return null;
+
     }
 
     @Override

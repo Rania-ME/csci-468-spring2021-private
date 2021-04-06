@@ -4,7 +4,6 @@ import edu.montana.csci.csci468.bytecode.ByteCodeGenerator;
 import edu.montana.csci.csci468.eval.CatscriptRuntime;
 import edu.montana.csci.csci468.parser.CatscriptType;
 import edu.montana.csci.csci468.parser.ErrorType;
-import edu.montana.csci.csci468.parser.ParseError;
 import edu.montana.csci.csci468.parser.SymbolTable;
 import edu.montana.csci.csci468.tokenizer.Token;
 
@@ -71,7 +70,20 @@ public class ComparisonExpression extends Expression {
 
     @Override
     public Object evaluate(CatscriptRuntime runtime) {
-        return super.evaluate(runtime);
+        //return super.evaluate(runtime);
+        Integer lhs = (Integer)leftHandSide.evaluate(null);
+        Integer rhs = (Integer)rightHandSide.evaluate(null);
+        if (isLessThan()) {
+            return (lhs < rhs);
+        } else if (isLessThanOrEqual()) {
+            return (lhs <= rhs);
+        } else if (isGreater()) {
+            return (lhs > rhs);
+        } else if (isGreaterThanOrEqual()) {
+            return (lhs >= rhs);
+        } else {
+            return false;
+        }
     }
 
     @Override

@@ -75,13 +75,41 @@ public class AdditiveExpression extends Expression {
 
     @Override
     public Object evaluate(CatscriptRuntime runtime) {
-        Integer lhsValue = (Integer) leftHandSide.evaluate(runtime);
-        Integer rhsValue = (Integer) rightHandSide.evaluate(runtime);
-        //TODO handle string case
-        if (isAdd()) {
-            return lhsValue + rhsValue;
-        } else {
-            return lhsValue - rhsValue;
+        if (leftHandSide instanceof AdditiveExpression) {
+            Object lhsValue = leftHandSide.evaluate(runtime);
+            if (rightHandSide instanceof IntegerLiteralExpression) {
+                Integer rhsValue = (Integer) rightHandSide.evaluate(runtime);
+                if (isAdd()) {
+                    return (Integer)lhsValue + rhsValue;
+                } else {
+                    return (Integer)lhsValue - rhsValue;
+                }
+            } else {
+                String rhsValue = (String) rightHandSide.evaluate(runtime);
+                if (isAdd()) {
+                    return (String)lhsValue + rhsValue;
+                } else {
+                    return "";
+                }
+            }
+        } else if (leftHandSide instanceof IntegerLiteralExpression) {
+            Integer lhsValue = (Integer) leftHandSide.evaluate(runtime);
+            Integer rhsValue = (Integer) rightHandSide.evaluate(runtime);
+            //TODO handle string case
+            if (isAdd()) {
+                return lhsValue + rhsValue;
+            } else {
+                return lhsValue - rhsValue;
+            }
+        }
+        else {
+            String lhsValue = (String) leftHandSide.evaluate(runtime);
+            String rhsValue = (String) rightHandSide.evaluate(runtime);
+            if (isAdd()) {
+                return lhsValue + rhsValue;
+            } else {
+                return "";
+            }
         }
     }
 
