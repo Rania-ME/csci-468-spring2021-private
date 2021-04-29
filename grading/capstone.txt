@@ -1,4 +1,4 @@
 Errors:
 
 - Missing source zip
-- Missing Rania_Ehsan_portfolio.pdf
+- Missing rania_ehsan_portfolio.pdf
